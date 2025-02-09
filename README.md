@@ -62,7 +62,7 @@ This app allows users to **create, edit, delete, and categorize tasks**, with au
 
 ### 🔹 **1️⃣ Clone the Repository**
 
-- **git clone https://github.com/your-username/task-manager.git**
+- **git clone https://github.com/Mohamedkhaled2310/Todo/**
 - **cd task-manager**
 
 
