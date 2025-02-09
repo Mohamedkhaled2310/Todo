@@ -42,7 +42,22 @@ This app allows users to **create, edit, delete, and categorize tasks**, with au
 - **Puppeteer** (for LinkedIn scraping)
 
 ---
+## 🎨 **Screenshots**
+### 🔹 Home Page
+![Home Page](screenshots/homepage.png)
+### 🔹 Login Page
+![Home Page](screenshots/login.png)
+### 🔹 Dashboard
+![Dashboard](screenshots/dashboard.png)
+### 🔹 Profile Page
+![Profile Page](screenshots/profile.png)
 
+
+
+
+
+
+---
 ## 📦 **Installation & Setup**
 
 ### 🔹 **1️⃣ Clone the Repository**
