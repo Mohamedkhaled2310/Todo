@@ -44,13 +44,13 @@ This app allows users to **create, edit, delete, and categorize tasks**, with au
 ---
 ## 🎨 **Screenshots**
 ### 🔹 Home Page
-![Home Page](screenshots/homepage.png)
+![Home Page](https://raw.githubusercontent.com/Mohamedkhaled2310/Todo/refs/heads/main/srceenshots/home.png)
 ### 🔹 Login Page
-![Home Page](screenshots/login.png)
+![Home Page](https://raw.githubusercontent.com/Mohamedkhaled2310/Todo/refs/heads/main/srceenshots/login.png)
 ### 🔹 Dashboard
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](https://raw.githubusercontent.com/Mohamedkhaled2310/Todo/refs/heads/main/srceenshots/dashboard.png)
 ### 🔹 Profile Page
-![Profile Page](screenshots/profile.png)
+![Profile Page](https://raw.githubusercontent.com/Mohamedkhaled2310/Todo/refs/heads/main/srceenshots/profile.png)
 
 
 
