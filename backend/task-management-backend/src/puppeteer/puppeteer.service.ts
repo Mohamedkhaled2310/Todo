@@ -1,70 +1,37 @@
 import { Injectable } from '@nestjs/common';
-import * as puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer';
 
 @Injectable()
 export class PuppeteerService {
-  async scrapeLinkedInProfile(linkedinUrl: string) {
-    const browser = await puppeteer.launch({
-      headless: false, 
-      args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-blink-features=AutomationControlled',
-      ],
-    });
+  async scrapeLinkedInProfile(postUrl: string): Promise<{ imgElement: string | null; nameElement: string | null } | { error: string; details?: string }> {
+    if (!postUrl) {
+      return { error: "postUrl is required in the request body" };
+    }
 
-    const page = await browser.newPage();
-
-    // for virtual login
     try {
-      await page.setCookie({
-        name: 'li_at',
-        value: '',
-        domain: '.linkedin.com',
-        httpOnly: true,
-        secure: true,
+      const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+      const page = await browser.newPage();
+
+      await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36');
+
+      await page.goto(postUrl, {
+        waitUntil: 'networkidle2',
+        timeout: 60000,
       });
 
-     
-      await page.setUserAgent(
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, مثل Gecko) Chrome/91.0.4472.124 Safari/537.36'
-      );
+      await page.waitForSelector('h1', { timeout: 10000 });
 
-      await page.setViewport({ width: 1280, height: 800 });
+      const linkedinInfo = await page.evaluate(() => {
+        const imgElement = document.querySelector('[data-ghost-classes="bg-color-entity-ghost-background"]')?.getAttribute('src') || null;
+        const nameElement = document.querySelector('[data-tracking-control-name="public_post_feed-actor-name"]')?.textContent?.trim() || null;
 
-      console.log('Navigating to LinkedIn profile:', linkedinUrl);
-      await page.goto(linkedinUrl, { waitUntil: 'networkidle2' });
-
-      
-      const cookies = await page.cookies();
-      if (!cookies.some(cookie => cookie.name === 'li_at')) {
-        throw new Error('Puppeteer is not logged in. LinkedIn requires authentication.');
-      }
-
-
-      await page.evaluate(() => { window.scrollBy(0, window.innerHeight); });
-
-      await page.waitForSelector('.text-heading-xlarge', { timeout: 15000 });
-
-      const name = await page.$eval('.text-heading-xlarge', el => el.textContent?.trim() || '');
-
-   
-      const headline = await page.$eval('.text-body-medium.break-words', el => el.textContent?.trim() || '');
-
- 
-      let photo: string | null = null;
-      try {
-        photo = await page.$eval('.pv-top-card-profile-picture__image', el => el.getAttribute('src') || null);
-      } catch (imageError) {
-        console.warn('Profile image not found, using default image.');
-      }
+        return { imgElement, nameElement };
+      });
 
       await browser.close();
-      return { name, headline, photo };
+      return linkedinInfo;
     } catch (error) {
-      console.error('Error scraping LinkedIn profile:', error);
-      await browser.close();
-      throw new Error('Failed to scrape LinkedIn profile. LinkedIn might require login.');
+      return { error: "Failed to scrape data", details: error.message };
     }
   }
 }

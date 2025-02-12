@@ -10,7 +10,7 @@ export class RegisterDto {
 
   @IsOptional()
   @IsUrl()
-  linkedinProfileUrl?: string;
+  linkedinPostUrl?: string;
 
   @IsString()
   @IsNotEmpty()

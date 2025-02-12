@@ -17,7 +17,7 @@ export class UserService {
   ) {}
 
   async register(registerDto: RegisterDto): Promise<User> {
-    const { email, password, linkedinProfileUrl, name } = registerDto;
+    const { email, password, linkedinPostUrl, name } = registerDto;
 
 
     const existingUser = await this.userModel.findOne({ email }).exec();
@@ -28,11 +28,16 @@ export class UserService {
     let finalName = name;
     let linkedinPhoto = '';
 
-    if (linkedinProfileUrl) {
+    if (linkedinPostUrl) {
       try {
-        const scrapedData = await this.puppeteerService.scrapeLinkedInProfile(linkedinProfileUrl);
-        finalName = scrapedData.name || name;
-        linkedinPhoto = scrapedData.photo || linkedinPhoto;
+        const scrapedData = await this.puppeteerService.scrapeLinkedInProfile(linkedinPostUrl);
+    
+        if (scrapedData && !('error' in scrapedData)) {
+          finalName = scrapedData.nameElement || name;
+          linkedinPhoto = scrapedData.imgElement || linkedinPhoto;
+        } else {
+          console.warn('LinkedIn scraping returned an error:', scrapedData.error);
+        }
       } catch (error) {
         console.error('Failed to scrape LinkedIn profile:', error);
       }
@@ -43,7 +48,6 @@ export class UserService {
     const createdUser = new this.userModel({
       email,
       password: hashedPassword,
-      linkedinProfileUrl: linkedinProfileUrl || null,
       name: finalName,
       linkedinPhoto,
     });
