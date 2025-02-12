@@ -20,7 +20,7 @@ const Profile = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    linkedinProfileUrl: "",
+    linkedinPhoto:"avatar.png"
   });
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Profile = () => {
       setFormData({
         name: user.name || "",
         email: user.email || "",
-        linkedinProfileUrl: user.linkedinProfileUrl || "",
+        linkedinPhoto: user.linkedinPhoto || "avatar.png",
       });
     }
   }, [user]);
@@ -48,7 +48,7 @@ const Profile = () => {
       setFormData({
         name: updatedUser.name || "",
         email: updatedUser.email || "",
-        linkedinProfileUrl: updatedUser.linkedinProfileUrl || "",
+        linkedinPhoto: updatedUser.linkedinPhoto || "avatar.png",
       }); 
     } catch (err) {
       toast.error("Failed to update profile.");
@@ -71,11 +71,9 @@ const Profile = () => {
             <p className="text-center text-gray-400">Loading...</p>
           ) : (
             <>
-              <ProfileImage />
+              <ProfileImage linkedinPhoto={formData.linkedinPhoto}/>
               <ProfileInput label="Name" name="name" value={formData.name} onChange={handleChange} />
-              <ProfileInput label="Email" name="email" type="email" value={formData.email} onChange={handleChange} />
-              <ProfileInput label="LinkedIn Profile" name="linkedinProfileUrl" value={formData.linkedinProfileUrl} onChange={handleChange} />
-
+              <ProfileInput label="Email" name="email" type="email" value={formData.email} onChange={handleChange} /> 
               <button
                 onClick={handleSubmit}
                 className="w-full bg-purple-600 hover:bg-purple-700 transition p-3 rounded-md font-semibold mt-4"
